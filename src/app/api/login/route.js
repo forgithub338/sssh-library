@@ -1,4 +1,4 @@
-import { createConnection } from "../../../../lib/db"
+import { createConnection } from "../../../../lib/connectDB"
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
