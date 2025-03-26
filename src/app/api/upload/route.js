@@ -105,7 +105,7 @@ async function uploadToCloudinary(file, folderName) {
     const buffer = Buffer.from(bytes);
     
     // Ensure uploads directory exists
-    const uploadsDir = path.join(process.cwd(), "lib/uploads");
+    const uploadsDir = path.join(process.cwd(), "public/uploads");
     await mkdir(uploadsDir, { recursive: true });
     
     // Generate a unique temporary filename
