@@ -20,7 +20,7 @@ export default function Home() {
 
   const employeeElement = post.map(user => {
     return (
-      <div key={user.id}>
+      <div key={user.email}>
         <p>email: {user.email}</p>
         <p>password: {user.password}</p>
       </div>
