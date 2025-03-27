@@ -49,11 +49,15 @@ export async function POST(req) {
       }
     }
 
+    let date = new Date();
+    date = date.setHours(date.getHours() + 8);
+    const mysqlDateTime = new Date(date).toISOString().slice(0, 19).replace('T', ' ');
+
     // Save to database
     const db = await createConnection();
     const [result] = await db.execute(
-      "INSERT INTO projects (author, title, description) VALUES (?, ?, ?)",
-      [author, title, description]
+      "INSERT INTO projects (author, title, description, date, view, love) VALUES (?, ?, ?, ?, ?, ?)",
+      [author, title, description, mysqlDateTime, 0, 0]
     );
     
     const projectId = result.insertId;
