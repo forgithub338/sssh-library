@@ -5,10 +5,13 @@ import { uploadToCloudinary } from "@/../lib/uploadToCloudinary";
 export async function POST(req) {
   try {
     const formData = await req.formData();
-    const author = "11130023@sssh.tp.edu.tw"
+    const author = formData.get("author");
     if (!author) {
       return NextResponse.json({ error: "作者ID是必填欄位" }, { status: 400 });
     }
+
+    const title = formData.get("title");
+    const description = formData.get("description");
     
     // Initialize arrays for file URLs
     const imageUrls = [];
@@ -49,8 +52,8 @@ export async function POST(req) {
     // Save to database
     const db = await createConnection();
     const [result] = await db.execute(
-      "INSERT INTO projects (author) VALUES (?)",
-      [author]
+      "INSERT INTO projects (author, title, description) VALUES (?, ?, ?)",
+      [author, title, description]
     );
     
     const projectId = result.insertId;
