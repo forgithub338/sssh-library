@@ -10,7 +10,7 @@ export default function QuickActions() {
       <button 
         style={{background: 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}}
         className="relative overflow-hidden group px-6 py-5 text-white rounded-xl transition-all duration-500 shadow-lg hover:shadow-2xl flex items-center justify-center font-medium text-lg"
-        onClick={() => router.push(`/upload?email=${email}`)}
+        onClick={() => router.push('/upload')}
         onMouseOver={(e) => e.currentTarget.style.background = 'linear-gradient(to right, #9B1B30, #9B1B30)'}
         onMouseOut={(e) => e.currentTarget.style.background = 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}
       >
@@ -23,7 +23,7 @@ export default function QuickActions() {
       
       <button 
         className="relative overflow-hidden group px-6 py-5 text-[#1E3A8A] bg-white rounded-xl transition-all duration-500 shadow-lg hover:shadow-2xl flex items-center justify-center font-medium text-lg border-2 border-[#1E3A8A] hover:text-[#9B1B30] hover:border-[#9B1B30]"
-        onClick={() => router.push(`/projects?email=${email}`)}
+        onClick={() => router.push('/projects')}
       >
         <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-[#FAF3E0] rounded-full group-hover:w-80 group-hover:h-80 opacity-50"></span>
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" viewBox="0 0 20 20" fill="currentColor">

@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 export default function Login() {
   const router = useRouter();
@@ -17,6 +19,8 @@ export default function Login() {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
+    
+    console.log(`Attempting login for: ${email}`);
 
     try {
       const response = await fetch("/api/login", {
@@ -26,16 +30,28 @@ export default function Login() {
         },
         body: JSON.stringify({ email, password }),
       });
-
+      
       const data = await response.json();
+      console.log('Login response:', data);
 
-      if (data.success) {
-        router.push(`/dashboard?email=${email}`);
+      if (data.success && data.token) {
+        console.log("Login successful, setting cookie directly in browser");
+        
+        // 保存到 localStorage 和 cookie
+        localStorage.setItem('authToken', data.token);
+        Cookies.set('authToken', data.token, { expires: 1, path: '/' });
+        
+        // 延遲導航，確保存儲完成
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 300);
       } else {
+        console.log('Login failed:', data.message || 'Unknown error');
         setLoginSuccess(false);
       }
     } catch (error) {
-      console.log(error);
+      console.error('Login error:', error);
+      setLoginSuccess(false);
     }
   };
 

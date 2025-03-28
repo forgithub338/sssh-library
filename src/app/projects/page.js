@@ -174,9 +174,8 @@ export default function ProjectsPage() {
                           </div>
                           
                           <div className="mt-4 flex justify-between">
-                            
                             <button 
-                              onClick={() => {router.push(`/projects/projectOverview/${project.project_id}?email=${email}`)}}
+                              onClick={() => {router.push(`/projects/projectOverview/${project.project_id}`)}}
                               className="text-[#1E3A8A] text-sm hover:text-[#9B1B30] transition-colors flex items-center"
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">

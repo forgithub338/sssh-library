@@ -28,6 +28,11 @@ export default function ProjectPage() {
         }
         
         const data = await response.json();
+        
+        if (data.project && data.project.author !== email) {
+          throw new Error("You don't have permission to view this project");
+        }
+        
         setProject(data.project);
         console.log(data.project);
       } catch (err) {
@@ -64,9 +69,8 @@ export default function ProjectPage() {
           throw new Error(`刪除失敗: ${response.status}`);
         }
 
-
         // Redirect to projects page after successful deletion
-        router.push(`/projects?email=${encodeURIComponent(email)}`);
+        router.push('/projects');
       } catch (err) {
         console.error("Error deleting project:", err);
         alert(`刪除失敗: ${err.message}`);
@@ -247,7 +251,7 @@ export default function ProjectPage() {
                 <div className="bg-white p-8 rounded-xl shadow text-center">
                   <p className="text-[#333333]">找不到此專案</p>
                   <button 
-                    onClick={() => router.push(`/projects?email=${email}`)}
+                    onClick={() => router.push('/projects')}
                     className="mt-4 px-4 py-2 bg-[#1E3A8A] text-white rounded-lg hover:bg-[#9B1B30] transition-colors"
                   >
                     返回作品列表

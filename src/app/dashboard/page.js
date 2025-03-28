@@ -17,18 +17,7 @@ import getUserEmail from '../../../lib/getUserEmail';
 
 export default function Dashboard() {
   const router = useRouter();
-  const email = getUserEmail();
   
-  useEffect(() => {
-    if (!email) {
-      router.push('/login');
-    }
-  }, [email, router]);
-
-  if (!email) {
-    return null;
-  }
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
