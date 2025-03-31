@@ -14,6 +14,8 @@ export default function ProjectsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sortOption, setSortOption] = useState('date-desc');
+  const [loadingProjectId, setLoadingProjectId] = useState(null);
 
   useEffect(() => {
     if (!email) {
@@ -31,6 +33,7 @@ export default function ProjectsPage() {
         }
         
         const data = await response.json();
+        console.log(data);
         setProjects(data.projects || []);
       } catch (error) {
         console.error("Error fetching projects:", error);
@@ -47,6 +50,31 @@ export default function ProjectsPage() {
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('zh-TW', options);
+  };
+
+  // Function to handle sorting
+  const handleSort = (option) => {
+    setSortOption(option);
+  };
+
+  // Function to get sorted projects
+  const getSortedProjects = () => {
+    if (!projects.length) return [];
+    
+    const sortedProjects = [...projects];
+    
+    switch (sortOption) {
+      case 'date-desc':
+        return sortedProjects.sort((a, b) => new Date(b.date) - new Date(a.date));
+      case 'date-asc':
+        return sortedProjects.sort((a, b) => new Date(a.date) - new Date(b.date));
+      case 'love-desc':
+        return sortedProjects.sort((b, a) => (a.love || 0) - (b.love || 0));
+      case 'love-asc':
+        return sortedProjects.sort((a, b) => (a.love || 0) - (b.love || 0));
+      default:
+        return sortedProjects;
+    }
   };
 
   return (
@@ -101,7 +129,21 @@ export default function ProjectsPage() {
               ) : (
                 <div>
                   <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-lg font-medium text-[#333333]">共 {projects.length} 個作品</h2>
+                    <div className="flex items-center">
+                      <h2 className="text-lg font-medium text-[#333333]">共 {projects.length} 個作品</h2>
+                      <div className="ml-4">
+                        <select 
+                          value={sortOption}
+                          onChange={(e) => handleSort(e.target.value)}
+                          className="bg-white border border-gray-200 text-[#333333] py-1 px-3 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
+                        >
+                          <option value="date-desc">最新上傳</option>
+                          <option value="date-asc">最早上傳</option>
+                          <option value="love-desc">最多喜歡</option>
+                          <option value="love-asc">最少喜歡</option>
+                        </select>
+                      </div>
+                    </div>
                     <button 
                       onClick={() => router.push(`/upload?email=${email}`)}
                       className="px-4 py-2 bg-[#1E3A8A] text-white rounded-lg hover:bg-[#9B1B30] transition-colors flex items-center"
@@ -114,7 +156,7 @@ export default function ProjectsPage() {
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {projects.map((project) => (
+                    {getSortedProjects().map((project) => (
                       <div key={project.project_id} className="bg-white rounded-xl shadow overflow-hidden hover:shadow-lg transition-all transform hover:-translate-y-1 duration-300">
                         <div style={{background: 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}} className="p-4 text-white">
                           <h3 className="font-medium truncate">{project.title}</h3>
@@ -123,12 +165,26 @@ export default function ProjectsPage() {
                         <div className="p-4">
                           <p className="text-[#B0B0B0] text-sm mb-3">上傳於 {formatDate(project.date)} {new Date(project.date).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })}</p>
                           <p className="text-[#333333] line-clamp-2 h-10">{project.description || '無描述'}</p>
+
+                          <div className="flex flex-wrap gap-2 mt-3">
+                            {project.type && (
+                              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-[#FAF3E0] text-[#1E3A8A]">
+                                {project.type}
+                              </span>
+                            )}
+                            {project.section && (
+                              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-[#1E3A8A]">
+                                {project.section}
+                              </span>
+                            )}
+                          </div>
+
                           <div className="flex gap-4 mt-4">
                             <div className="flex items-center text-sm text-[#B0B0B0]">
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
                               </svg>
-                              {project.image} 張照片
+                              {project.img} 張照片
                             </div>
                             <div className="flex items-center text-sm text-[#B0B0B0]">
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -160,29 +216,31 @@ export default function ProjectsPage() {
                             </div>
                           </div>
                           
-                          <div className="flex flex-wrap gap-2 mt-3">
-                            {project.type && (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#FAF3E0] text-[#1E3A8A]">
-                                {project.type}
-                              </span>
-                            )}
-                            {project.subject && (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-[#1E3A8A]">
-                                {project.subject}
-                              </span>
-                            )}
-                          </div>
-                          
                           <div className="mt-4 flex justify-between">
                             <button 
-                              onClick={() => {router.push(`/projects/projectOverview/${project.project_id}`)}}
+                              onClick={() => {
+                                setLoadingProjectId(project.project_id);
+                                setTimeout(() => {
+                                  router.push(`/projects/projectOverview/${project.project_id}`);
+                                }, 300);
+                              }}
+                              disabled={loadingProjectId === project.project_id}
                               className="text-[#1E3A8A] text-sm hover:text-[#9B1B30] transition-colors flex items-center"
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                              </svg>
-                              查看詳情
+                              {loadingProjectId === project.project_id ? (
+                                <>
+                                  <div className="h-4 w-4 mr-1 animate-spin rounded-full border-2 border-t-transparent border-[#1E3A8A]"></div>
+                                  跳轉中...
+                                </>
+                              ) : (
+                                <>
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                    <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                                  </svg>
+                                  查看詳情
+                                </>
+                              )}
                             </button>
                           </div>
                         </div>

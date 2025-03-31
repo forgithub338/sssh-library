@@ -246,7 +246,7 @@ export default function Upload() {
       console.log(result);
       if (response.ok) {
         // 上傳成功後重定向到項目頁面
-        // router.push(`/projects`);
+        router.push(`/projects`);
       } else {
         throw new Error(result.error || "上傳失敗");
       }

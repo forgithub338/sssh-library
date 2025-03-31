@@ -19,26 +19,6 @@ export async function GET(request) {
       'SELECT * FROM projects WHERE author = ?',
       [email]
     );
-    
-
-    for(const row of rows) {
-      const [fileCounts] = await connection.execute(
-        'SELECT type, COUNT(*) as count FROM upload_files WHERE project_id = ? GROUP BY type',
-        [row.project_id]
-      );
-
-      // Initialize counts
-      row.image = 0;
-      row.video = 0;
-      row.pdf = 0;
-
-      // Update counts based on query results
-      fileCounts.forEach(count => {
-        if (count.type === 'image') row.image = count.count;
-        if (count.type === 'video') row.video = count.count;
-        if (count.type === 'pdf') row.pdf = count.count;
-      });
-    }
 
     return NextResponse.json({ projects: rows });
   } catch (error) {
