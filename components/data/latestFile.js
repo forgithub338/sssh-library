@@ -1,44 +1,70 @@
 import { DocumentTextIcon } from "@heroicons/react/24/outline";
 
-export default [
-  {
-    id: 1,
-    title: '互動式網頁設計作品',
-    type: '網頁設計',
-    date: '3 天前',
-    likes: 18,
-    views: 86,
-    typeColor: 'bg-[#1E3A8A]',
-    icon: DocumentTextIcon
-  },
-  {
-    id: 2,
-    title: '行動應用介面設計',
-    type: 'UI/UX 設計',
-    date: '1 週前',
-    likes: 24,
-    views: 102,
-    typeColor: 'bg-purple-500',
-    icon: DocumentTextIcon
-  },
-  {
-    id: 3,
-    title: '品牌識別設計專案',
-    type: '平面設計',
-    date: '2 週前',
-    likes: 12,
-    views: 45,
-    typeColor: 'bg-[#9B1B30]',
-    icon: DocumentTextIcon
-  },
-  {
-    id: 4,
-    title: '產品宣傳短片',
-    type: '影片製作',
-    date: '3 週前',
-    likes: 9,
-    views: 33,
-    typeColor: 'bg-green-500',
-    icon: DocumentTextIcon
-  },
-];
+export default function latestFiles({latestProject1, latestProject2, latestProject3, latestProject4}) {
+  // Format date to readable format
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    
+    // If it's already in a simple format, return as is
+    if (!dateString.includes('T')) return dateString;
+    
+    // Parse the ISO string
+    const date = new Date(dateString);
+    
+    // Format as YYYY/MM/DD HH:MM
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    
+    return `${year}/${month}/${day} ${hours}:${minutes}`;
+  };
+
+  return [
+    {
+      id: latestProject1?.project_id || 1,
+      title: latestProject1?.title || '無標題專案',
+      type: latestProject1?.type || '未分類',
+      section: latestProject1?.section,
+      date: latestProject1?.date ? formatDate(latestProject1.date) : '未知日期',
+      likes: latestProject1?.love || 0,
+      views: latestProject1?.view || 0,
+      typeColor: 'bg-[#1E3A8A]',
+      icon: DocumentTextIcon
+    },
+    {
+      id: latestProject2?.project_id || 2,
+      title: latestProject2?.title || '無標題專案',
+      type: latestProject2?.type || '未分類',
+      section: latestProject2?.section,
+      date: latestProject2?.date ? formatDate(latestProject2.date) : '未知日期',
+      likes: latestProject2?.love || 0,
+      views: latestProject2?.view || 0,
+      typeColor: 'bg-purple-500',
+      icon: DocumentTextIcon
+    },
+    {
+      id: latestProject3?.project_id || 3,
+      title: latestProject3?.title || '無標題專案',
+      type: latestProject3?.type || '未分類',
+      section: latestProject3?.section,
+      date: latestProject3?.date ? formatDate(latestProject3.date) : '未知日期',
+      likes: latestProject3?.love || 0,
+      views: latestProject3?.view || 0,
+      typeColor: 'bg-[#9B1B30]',
+      icon: DocumentTextIcon
+    },
+    {
+      id: latestProject4?.project_id || 4,
+      title: latestProject4?.title || '無標題專案',
+      type: latestProject4?.type || '未分類',
+      section: latestProject4?.section,
+      date: latestProject4?.date ? formatDate(latestProject4.date) : '未知日期',
+      likes: latestProject4?.love || 0,
+      views: latestProject4?.view || 0,
+      typeColor: 'bg-green-500',
+      icon: DocumentTextIcon
+    },
+  ];
+} 

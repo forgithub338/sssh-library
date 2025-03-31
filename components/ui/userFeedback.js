@@ -4,7 +4,7 @@ export default function UserFeedback() {
   return (
     <div className="bg-white overflow-hidden shadow rounded-xl border border-gray-100">
       <div style={{background: 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}} className="p-4 text-white">
-        <h3 className="text-lg font-medium">最近獲得的回饋</h3>
+        <h3 className="text-lg font-medium">最近獲得的回饋(未啟用)</h3>
       </div>
       <div className="p-5 divide-y divide-gray-200">
         {feedbacks.map((feedback) => (

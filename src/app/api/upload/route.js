@@ -5,6 +5,7 @@ import { uploadToCloudinary } from "@/../lib/uploadToCloudinary";
 export async function POST(req) {
   try {
     const formData = await req.formData();
+    
     const author = formData.get("author");
     if (!author) {
       return NextResponse.json({ error: "作者ID是必填欄位" }, { status: 400 });
@@ -12,6 +13,9 @@ export async function POST(req) {
 
     const title = formData.get("title");
     const description = formData.get("description");
+    const type = formData.get("projectType");
+    const subject = formData.get("subject") + "-" + formData.get("interest");
+    
     
     // Initialize arrays for file URLs
     const imageUrls = [];
@@ -53,14 +57,32 @@ export async function POST(req) {
     date = date.setHours(date.getHours() + 8);
     const mysqlDateTime = new Date(date).toISOString().slice(0, 19).replace('T', ' ');
 
+    const img = imageUrls.length;
+    const video = videoUrls.length;
+    const pdf = pdfUrls.length;
+
     // Save to database
     const db = await createConnection();
     const [result] = await db.execute(
-      "INSERT INTO projects (author, title, description, date, view, love) VALUES (?, ?, ?, ?, ?, ?)",
-      [author, title, description, mysqlDateTime, 0, 0]
+      "INSERT INTO projects (author, title, description, date, view, love, img, video, pdf, type, section) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [author, title, description, mysqlDateTime, 0, 0, img, video, pdf, type, subject]
     );
     
     const projectId = result.insertId;
+
+    const [latestProject] = await db.execute(
+      "SELECT * FROM users WHERE email = ?",
+      [author]
+    );
+
+    const latestProject2 = latestProject[0].latestProject1;
+    const latestProject3 = latestProject[0].latestProject2;
+    const latestProject4 = latestProject[0].latestProject3;
+
+    await db.execute(
+      "UPDATE users SET latestDate = ?, latestProject1 = ?, latestProject2 = ?, latestProject3 = ?, latestProject4 = ? WHERE email = ?",
+      [mysqlDateTime, projectId, latestProject2, latestProject3, latestProject4, author]
+    );
     
     // Save file references
     for (const url of imageUrls) {

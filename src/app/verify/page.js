@@ -20,7 +20,7 @@ export default function Verify() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedPassword = sessionStorage.getItem("newPassword") || "";
-      console.log(storedPassword);
+      // console.log(storedPassword);
       if (storedPassword) {
         setPassword(storedPassword);
       }
@@ -83,7 +83,7 @@ export default function Verify() {
           });
           
           const data = await response.json();
-          console.log("Account creation response:", data);
+          // console.log("Account creation response:", data);
           
           if (sessionStorage.getItem("newPassword")) {
             sessionStorage.removeItem("newPassword");

@@ -1,7 +1,11 @@
 import { HeartIcon, EyeIcon } from "@heroicons/react/24/outline";
-import latestFile from "../data/latestFile";
+import latestFileBasic from "../data/latestFile";
 
-export default function UserLatestFile() {
+
+
+export default function UserLatestFile(props) {
+  const latestFile = latestFileBasic(props);
+
   return (
     <div className="mt-8">
                 <div className="bg-white shadow rounded-xl border border-gray-100 overflow-hidden">
@@ -20,6 +24,9 @@ export default function UserLatestFile() {
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-[#333333] truncate">{project.title}</p>
                             <p className="text-sm text-[#B0B0B0] truncate">{project.type}</p>
+                            {project.section && (
+                              <p className="text-sm text-[#8E9FE6] truncate">{project.section}</p>
+                            )}
                           </div>
                           <div className="text-right">
                             <p className="text-sm text-[#9B1B30]">{project.date}</p>
@@ -35,7 +42,7 @@ export default function UserLatestFile() {
                     ))}
                   </ul>
                   <div className="bg-gray-50 px-5 py-3">
-                    <a href="#" className="text-sm font-medium text-[#1E3A8A] hover:text-[#9B1B30] transition-colors flex justify-center items-center">
+                    <a href="/projects" className="text-sm font-medium text-[#1E3A8A] hover:text-[#9B1B30] transition-colors flex justify-center items-center">
                       查看所有作品
                       <svg className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
