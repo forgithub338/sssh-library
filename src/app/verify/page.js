@@ -10,8 +10,22 @@ export default function Verify() {
   const [code, setCode] = useState(Array(6).fill(""));
   const [generatedCode, setGeneratedCode] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
   const hasSentCode = useRef(false);
   const inputRefs = useRef([]);
+  
+  // 在組件載入時獲取密碼
+  const [password, setPassword] = useState(null);
+  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedPassword = sessionStorage.getItem("newPassword") || "";
+      console.log(storedPassword);
+      if (storedPassword) {
+        setPassword(storedPassword);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (email && !hasSentCode.current) {
@@ -27,7 +41,7 @@ export default function Verify() {
         body: JSON.stringify({ email, code: verificationCode }),
       });
     }
-  }, []);
+  }, [email]);
 
   const handleChange = (index, value) => {
     if (!/^\d?$/.test(value)) return; // 限制只能輸入數字
@@ -51,21 +65,46 @@ export default function Verify() {
   };
 
   const handleVerify = async () => {
+    // 清除錯誤訊息
+    setError("");
+    
     if (code.join("") === generatedCode) {
-      const password = sessionStorage.getItem("signupPassword");
+      setSuccess(true);
+      
       if (password) {
-        await fetch("/api/mySQL", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
-        });
-
-        sessionStorage.removeItem("signupPassword");
+        try {
+          // 當驗證成功後，發送創建帳號或更改密碼的請求
+          const response = await fetch("/api/changePassword", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+          });
+          
+          const data = await response.json();
+          console.log("Account creation response:", data);
+          
+          if (sessionStorage.getItem("newPassword")) {
+            sessionStorage.removeItem("newPassword");
+          }
+          
+          // 延遲導航，確保用戶能看到成功訊息
+          setTimeout(() => {
+            router.push("/login?method=relogin");
+          }, 1500);
+          
+        } catch (error) {
+          console.error("Error creating account:", error);
+          setError("創建帳號時發生錯誤，請稍後再試");
+          setSuccess(false);
+        }
+      } else {
+        // 如果沒有密碼，可能是單純的身份驗證
+        setTimeout(() => {
+          router.push("/login?method=relogin");
+        }, 1500);
       }
-
-      router.push("/login?method=relogin");
     } else {
       setError("驗證碼錯誤，請重新輸入！");
     }
@@ -85,37 +124,44 @@ export default function Verify() {
           <p className="text-[#9B1B30] text-sm mt-4 p-2 bg-red-50 rounded-lg inline-block">如果未收到訊息，請重新整理網頁以獲得新驗證碼</p>
         </div>
 
-        <div className="flex justify-center space-x-2 mb-6">
-          {code.map((digit, index) => (
-            <input
-              key={index}
-              type="text"
-              value={digit}
-              onChange={(e) => handleChange(index, e.target.value)}
-              onKeyDown={(e) => handleKeyDown(index, e)}
-              maxLength="1"
-              ref={(el) => (inputRefs.current[index] = el)}
-              className="w-12 h-12 border border-gray-200 rounded-lg text-center text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] shadow-sm bg-gray-50 focus:bg-white transition-all"
-            />
-          ))}
-        </div>
+        {success ? (
+          <div className="text-green-600 text-center mb-4 p-3 bg-green-50 rounded-lg">
+            驗證成功！正在為您跳轉...
+          </div>
+        ) : (
+          <>
+            <div className="flex justify-center space-x-2 mb-6">
+              {code.map((digit, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  value={digit}
+                  onChange={(e) => handleChange(index, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  maxLength="1"
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  className="w-12 h-12 border border-gray-200 rounded-lg text-center text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] shadow-sm bg-gray-50 focus:bg-white transition-all"
+                />
+              ))}
+            </div>
 
-        {error && <div className="text-[#9B1B30] text-center mb-4 p-3 bg-red-50 rounded-lg">{error}</div>}
+            {error && <div className="text-[#9B1B30] text-center mb-4 p-3 bg-red-50 rounded-lg">{error}</div>}
 
-        <button
-          onClick={handleVerify}
-          style={{background: 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}}
-          className="w-full py-3 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
-          onMouseOver={(e) => e.currentTarget.style.background = 'linear-gradient(to right, #9B1B30, #9B1B30)'}
-          onMouseOut={(e) => e.currentTarget.style.background = 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}
-        >
-          <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
-          驗證
-        </button>
+            <button
+              onClick={handleVerify}
+              style={{background: 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}}
+              className="w-full py-3 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300"
+              onMouseOver={(e) => e.currentTarget.style.background = 'linear-gradient(to right, #9B1B30, #9B1B30)'}
+              onMouseOut={(e) => e.currentTarget.style.background = 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}
+            >
+              驗證
+            </button>
+          </>
+        )}
         
         <div className="text-center mt-6">
-          <a href="/signUp" className="text-[#1E3A8A] hover:text-[#9B1B30] text-sm transition-colors">
-            返回註冊頁面
+          <a href="/login" className="text-[#1E3A8A] hover:text-[#9B1B30] text-sm transition-colors">
+            返回登入頁面
           </a>
         </div>
       </div>

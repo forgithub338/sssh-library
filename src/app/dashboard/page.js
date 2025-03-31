@@ -17,7 +17,9 @@ import getUserEmail from '../../../lib/getUserEmail';
 
 export default function Dashboard() {
   const router = useRouter();
-  
+  const email = getUserEmail();
+
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (

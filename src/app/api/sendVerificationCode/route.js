@@ -16,8 +16,8 @@ export async function POST(request) {
     await transporter.sendMail({
       from: "11130023@sssh.tp.edu.tw",
       to: email,
-      subject: "松山高中成果發表網站驗證碼",
-      text: `你的驗證碼是：${code}`,
+      subject: "[松山高中成果分享網站] 更改密碼驗證碼",
+      text: `親愛的使用者，\n\n您正在嘗試更改密碼，請使用以下驗證碼完成操作：\n\n驗證碼：${code}\n\n請注意：此驗證碼有效時間為 **10 分鐘**，請盡快使用。如果您沒有嘗試更改密碼，請忽略此郵件。\n\n松山高中成果分享網站敬上`,
     });
 
     return NextResponse.json({message: "驗證碼已發送"})

@@ -13,7 +13,9 @@ const publicPaths = [
   '/signUp',
   '/verify',
   '/',
-  '/api'
+  '/api',
+  '/changePassword',
+  '/test'
 ];
 
 export function middleware(request) {

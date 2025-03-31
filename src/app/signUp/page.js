@@ -96,7 +96,7 @@ export default function SignUp() {
           <button 
             type="submit"
             style={{background: 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}}
-            className="w-full py-3 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 mt-6 relative overflow-hidden group"
+            className="w-full py-3 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 mt-6"
             onMouseOver={(e) => e.currentTarget.style.background = 'linear-gradient(to right, #9B1B30, #9B1B30)'}
             onMouseOut={(e) => e.currentTarget.style.background = 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}
           >

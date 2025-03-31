@@ -34,17 +34,30 @@ export default function Login() {
       const data = await response.json();
       console.log('Login response:', data);
 
-      if (data.success && data.token) {
+      if (data.success) {
         console.log("Login successful, setting cookie directly in browser");
         
-        // 保存到 localStorage 和 cookie
-        localStorage.setItem('authToken', data.token);
-        Cookies.set('authToken', data.token, { expires: 1, path: '/' });
+        // 如果 API 返回了 token，直接在客戶端設置 cookie
+        if (data.token) {
+          Cookies.set('authToken', data.token, { 
+            expires: 1, // 1 天
+            path: '/'
+          });
+          
+          localStorage.setItem('authToken', data.token); // 備用存儲
+          console.log("Token stored in both cookie and localStorage");
+        }
         
-        // 延遲導航，確保存儲完成
-        setTimeout(() => {
-          window.location.href = '/dashboard';
-        }, 300);
+        // 檢查是否需要更改密碼
+        if (data.alterPassword === 0) {
+          console.log("First login detected, redirecting to password change");
+          window.location.href = '/changePassword?method="firstLogin';
+        } else {
+          // 延遲導航，確保存儲完成
+          setTimeout(() => {
+            window.location.href = '/dashboard';
+          }, 300);
+        }
       } else {
         console.log('Login failed:', data.message || 'Unknown error');
         setLoginSuccess(false);
@@ -63,7 +76,7 @@ export default function Login() {
           <div className="h-1 w-24 bg-white/50 mt-2 mx-auto rounded-full"></div>
         </div>
         
-        {method && <div className="text-[#1E3A8A] text-center mb-4 p-3 bg-blue-50 rounded-lg">帳號註冊成功，請重新登入</div>}
+        {method && <div className="text-[#1E3A8A] text-center mb-4 p-3 bg-blue-50 rounded-lg">更改密碼成功，請重新登入</div>}
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="group">
@@ -89,7 +102,9 @@ export default function Login() {
               onClick={() => setIsPasswordVisible((prev) => !prev)}
               className="absolute right-3 top-[60%] transform -translate-y-1/2 text-[#B0B0B0] hover:text-[#1E3A8A]"
             >
-              <FontAwesomeIcon icon={isPasswordVisible ? faEyeSlash : faEye} />
+              <FontAwesomeIcon 
+                icon={isPasswordVisible ? faEyeSlash : faEye} 
+                className="mt-5"/>
             </button>
           </div>
 
@@ -98,7 +113,7 @@ export default function Login() {
           <button
             type="submit"
             style={{background: 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}}
-            className="w-full py-3 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 mt-6 relative overflow-hidden group"
+            className="w-full py-3 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 mt-6"
             onMouseOver={(e) => e.currentTarget.style.background = 'linear-gradient(to right, #9B1B30, #9B1B30)'}
             onMouseOut={(e) => e.currentTarget.style.background = 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}
           >
@@ -106,11 +121,11 @@ export default function Login() {
             登入
           </button>
           
-          <div className="text-center mt-4">
+          {/* <div className="text-center mt-4">
             <a href="/signUp" className="text-[#1E3A8A] hover:text-[#9B1B30] text-sm transition-colors">
               還沒有帳號？立即註冊
             </a>
-          </div>
+          </div> */}
         </form>
       </div>
     </section>

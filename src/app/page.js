@@ -59,9 +59,6 @@ export default function Home() {
             <Link href="/login" className="login-btn">
               登入
             </Link>
-            <Link href="/signUp" className="register-btn">
-              註冊
-            </Link>
           </section>
         </>
       )}

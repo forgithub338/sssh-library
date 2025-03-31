@@ -9,7 +9,6 @@ export async function POST(request) {
   try {
     const db = await createConnection()
     const [rows] = await db.query("SELECT * FROM users WHERE email = ?", [email])
-
     if(rows.length > 0 && rows[0].password === password) {
       console.log('Login successful, creating token');
       
@@ -26,7 +25,8 @@ export async function POST(request) {
       const response = NextResponse.json({
         success: true,
         message: 'Login successful',
-        token: token // 也在响应正文中返回 token，方便调试
+        token: token, // 也在响应正文中返回 token，方便调试
+        alterPassword: rows[0].alterPassWord
       });
       
       // 修改 cookie 設置，移除可能導致問題的選項

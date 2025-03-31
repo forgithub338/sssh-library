@@ -16,7 +16,7 @@ export async function POST(request) {
   const { email, password } = await request.json()
   try {
     const db = await createConnection()
-    const [result] = await db.query("INSERT INTO users (email, password) VALUES (?, ?)", [email, password])
+    const [result] = await db.query("INSERT INTO users (email, password, alterPassword) VALUES (?, ?, ?)", [email, password, true])
     return NextResponse.json({message: "signUp success"})
   } catch(error) {
     console.log(`error: ${error}`)

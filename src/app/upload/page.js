@@ -141,14 +141,26 @@ export default function UploadPage() {
                       type="file"
                       accept="image/*"
                       multiple
-                      onChange={(e) => handleFileChange(e, "image")}
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files);
+                        const validFiles = files.filter(file => {
+                          if(file.size > 10 * 1024 * 1024) {
+                            alert(`檔案 ${file.name} 超過10MB限制`);
+                            return false;
+                          }
+                          return true;
+                        });
+                        if(validFiles.length > 0) {
+                          handleFileChange({target: {files: validFiles}}, "image");
+                        }
+                      }}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     />
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto text-[#1E3A8A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     <p className="mt-2 text-sm font-medium text-[#1E3A8A]">點擊或拖放圖片至此處</p>
-                    <p className="text-xs text-[#B0B0B0] mt-1">支持多張圖片上傳</p>
+                    <p className="text-xs text-[#B0B0B0] mt-1">支持多張圖片上傳 (每個檔案需小於10MB)</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-4">
@@ -192,14 +204,26 @@ export default function UploadPage() {
                       type="file"
                       accept="video/*"
                       multiple
-                      onChange={(e) => handleFileChange(e, "video")}
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files);
+                        const validFiles = files.filter(file => {
+                          if(file.size > 50 * 1024 * 1024) {
+                            alert(`檔案 ${file.name} 超過50MB限制`);
+                            return false;
+                          }
+                          return true;
+                        });
+                        if(validFiles.length > 0) {
+                          handleFileChange({target: {files: validFiles}}, "video");
+                        }
+                      }}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     />
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto text-[#1E3A8A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
                     <p className="mt-2 text-sm font-medium text-[#1E3A8A]">點擊或拖放影片至此處</p>
-                    <p className="text-xs text-[#B0B0B0] mt-1">支持多部影片上傳</p>
+                    <p className="text-xs text-[#B0B0B0] mt-1">支持多部影片上傳 (每個檔案需小於50MB)</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-6">
@@ -282,7 +306,7 @@ export default function UploadPage() {
           <button
             onClick={handleUpload}
             style={{background: 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}}
-            className="w-full mt-10 relative overflow-hidden group text-white py-4 px-6 rounded-xl transition-all duration-500 shadow-lg hover:shadow-2xl flex items-center justify-center font-medium text-lg"
+            className="w-full mt-10 text-white py-4 px-6 rounded-xl transition-all duration-500 shadow-lg hover:shadow-2xl flex items-center justify-center font-medium text-lg"
             onMouseOver={(e) => e.currentTarget.style.background = 'linear-gradient(to right, #9B1B30, #9B1B30)'}
             onMouseOut={(e) => e.currentTarget.style.background = 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}
           >
