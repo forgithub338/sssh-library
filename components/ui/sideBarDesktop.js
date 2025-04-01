@@ -1,6 +1,8 @@
-import navigation from "../data/navigation";
+import navigationBasic from "../data/navigation";
 import { useRouter } from 'next/navigation';
 import getUserEmail from '@/../lib/getUserEmail';
+
+const navigation = navigationBasic("管理者")
 
 export default function SideBarDesktop() {
   const router = useRouter();

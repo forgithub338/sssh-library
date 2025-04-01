@@ -4,7 +4,8 @@ import { NextResponse } from 'next/server';
 const protectedPaths = [
   '/dashboard',
   '/projects',
-  '/upload'
+  '/upload',
+  '/admin/review-projects'
 ];
 
 // Public paths that should always be accessible

@@ -245,7 +245,8 @@ export default function Upload() {
       const result = await response.json();
       console.log(result);
       if (response.ok) {
-        // 上傳成功後重定向到項目頁面
+        // 顯示上傳成功並需要審核的提示
+        alert("作品上傳成功！您的專案將在管理員審核後發布。");
         router.push(`/projects`);
       } else {
         throw new Error(result.error || "上傳失敗");

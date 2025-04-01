@@ -1,5 +1,7 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import navigation from "@/../components/data/navigation";
+import navigationBasic from "@/../components/data/navigation";
+
+const navigation = navigationBasic("管理者")
 
 export default function SideBarMedia(props) {
   return (

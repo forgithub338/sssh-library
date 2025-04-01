@@ -14,24 +14,24 @@ export default function ProjectPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
         setLoading(true);
-        console.log(projectId);
-        const response = await fetch(`/api/projectOverview?email=${encodeURIComponent(email)}&projectId=${projectId}method=user`);
+        const response = await fetch(`/api/projectOverview?email=${encodeURIComponent(email)}&projectId=${projectId}&method=admin`);
         
         if (!response.ok) {
           throw new Error(`Failed to fetch project: ${response.status} ${response.statusText}`);
         }
         
         const data = await response.json();
-        
-        
-        if (data.project && data.method !== 'admin'&& data.project.author !== email) {
-          throw new Error("You don't have permission to view this project");
+        console.log(data)
+
+        if(data.method !== 'admin'){
+          if (data.project && data.project.author !== email) {
+            throw new Error("You don't have permission to view this project");
+          }
         }
         
         setProject(data.project);
@@ -225,25 +225,6 @@ export default function ProjectPage() {
                         className="px-4 py-2 bg-[#1E3A8A] text-white rounded-lg hover:bg-[#9B1B30] transition-colors mr-4"
                       >
                         返回作品列表
-                      </button>
-                      <a 
-                        href={`/api/download/${project.project_id}`} 
-                        className="px-4 py-2 bg-gray-100 text-[#333333] rounded-lg hover:bg-gray-200 transition-colors inline-flex items-center mr-4"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-                        </svg>
-                        下載所有檔案
-                      </a>
-                      <button 
-                        onClick={() => deleteProject()} 
-                        disabled={isDeleting}
-                        className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors inline-flex items-center"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                        </svg>
-                        {isDeleting ? '刪除中...' : '刪除專案'}
                       </button>
                     </div>
                   </div>
