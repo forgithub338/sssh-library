@@ -10,9 +10,14 @@ export default function getNavigation(position) {
   // 所有用戶的基本導航項
   const baseNavigation = [
     {
-      name: '儀表板',
-      href: '/dashboard',
+      name: '首頁',
+      href: '/',
       icon: HomeIcon,
+    },
+    {
+      name: '個人資料',
+      href: '/dashboard',
+      icon: UserCircleIcon,
     },
     {
       name: '我的作品',
@@ -23,11 +28,6 @@ export default function getNavigation(position) {
       name: '上傳作品',
       href: '/upload',
       icon: ArrowUpTrayIcon,
-    },
-    {
-      name: '個人資料',
-      href: '/profile',
-      icon: UserCircleIcon,
     },
   ];
 

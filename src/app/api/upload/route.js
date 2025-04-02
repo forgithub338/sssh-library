@@ -75,13 +75,14 @@ export async function POST(req) {
       [author]
     );
 
+    const project = latestProject[0].project + 1;
     const latestProject2 = latestProject[0].latestProject1;
     const latestProject3 = latestProject[0].latestProject2;
     const latestProject4 = latestProject[0].latestProject3;
 
     await db.execute(
-      "UPDATE users SET latestDate = ?, latestProject1 = ?, latestProject2 = ?, latestProject3 = ?, latestProject4 = ? WHERE email = ?",
-      [mysqlDateTime, projectId, latestProject2, latestProject3, latestProject4, author]
+      "UPDATE users SET project = ?, latestDate = ?, latestProject1 = ?, latestProject2 = ?, latestProject3 = ?, latestProject4 = ? WHERE email = ?",
+      [project, mysqlDateTime, projectId, latestProject2, latestProject3, latestProject4, author]
     );
     
     // Save file references

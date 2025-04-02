@@ -10,6 +10,26 @@ export default function UserInformation(props) {
       return '學生'
     }
   }
+
+  function getDate() {
+    try {
+      const date = new Date(props.latestDate);
+      if (!isNaN(date)) {
+        return date.toLocaleString('zh-TW', { 
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        });
+      }
+      return props.latestDate;
+    } catch (e) {
+      return props.latestDate;
+    }
+  }
+
   return (
     <div className="mt-8 bg-white overflow-hidden shadow rounded-xl border border-gray-100">
                 <div style={{background: 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}} className="p-6">
@@ -44,8 +64,8 @@ export default function UserInformation(props) {
                     </div>
                     <div className="bg-[#FAF3E0] rounded-xl p-4 border border-gray-100">
                       <h3 className="text-sm font-medium text-[#B0B0B0]">最新活動</h3>
-                      <p className="text-lg font-medium text-[#333333] mt-2">{props.latestDate === null ? "目前無更新" : props.latestUpdate}</p>
-                      <p className="text-sm text-[#1E3A8A] mt-1">{props.latestProject === null ? "目前無專案" : props.latestUpdate}</p>
+                      <p className="text-lg font-medium text-[#333333] mt-2">{props.latestProject === null ? "目前無專案" : props.latestProject}</p>
+                      <p className="text-sm text-[#1E3A8A] mt-1">{props.latestDate === null ? "目前無更新" : getDate()}</p>
                     </div>
                   </div>
                 </div>

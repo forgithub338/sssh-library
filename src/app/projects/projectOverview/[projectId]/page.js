@@ -14,21 +14,19 @@ export default function ProjectPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
         setLoading(true);
         console.log(projectId);
-        const response = await fetch(`/api/projectOverview?email=${encodeURIComponent(email)}&projectId=${projectId}method=user`);
+        const response = await fetch(`/api/projectOverview?email=${encodeURIComponent(email)}&projectId=${projectId}&method=user`);
         
         if (!response.ok) {
           throw new Error(`Failed to fetch project: ${response.status} ${response.statusText}`);
         }
         
         const data = await response.json();
-        
         
         if (data.project && data.method !== 'admin'&& data.project.author !== email) {
           throw new Error("You don't have permission to view this project");
@@ -55,30 +53,6 @@ export default function ProjectPage() {
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('zh-TW', options);
-  };
-
-  // Function to delete project
-  const deleteProject = async () => {
-    if (window.confirm('確定要刪除此專案嗎？此操作無法復原。')) {
-      try {
-        setIsDeleting(true);
-        const response = await fetch(`/api/deleteProject?project=${JSON.stringify(project)}`, {
-          method: 'POST', 
-        });
-
-        if (!response.ok) {
-          throw new Error(`刪除失敗: ${response.status}`);
-        }
-
-        // Redirect to projects page after successful deletion
-        router.push('/projects');
-      } catch (err) {
-        console.error("Error deleting project:", err);
-        alert(`刪除失敗: ${err.message}`);
-      } finally {
-        setIsDeleting(false);
-      }
-    }
   };
 
   return (
@@ -118,6 +92,34 @@ export default function ProjectPage() {
                     <h2 className="text-xl font-semibold">{project.title}</h2>
                     <p className="mt-2 text-white opacity-80">作者: {project.author}</p>
                     <p className="text-white opacity-80">上傳於 {formatDate(project.date)} {new Date(project.date).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })}</p>
+                    
+                    <div className="flex flex-wrap items-center mt-3 gap-2">
+                      <div className="bg-white/20 px-3 py-1 rounded-full text-sm backdrop-blur-sm flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                        </svg>
+                        {project.type || '未分類'}
+                      </div>
+                      <div className="bg-white/20 px-3 py-1 rounded-full text-sm backdrop-blur-sm flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        {project.section || '未分類'}
+                      </div>
+                      {project.status && (
+                        <div className={`px-3 py-1 rounded-full text-sm font-medium flex items-center ${
+                          project.status === '審核中' ? 'bg-yellow-500/80 text-white' :
+                          project.status === '審核通過' ? 'bg-green-500/80 text-white' : 
+                          project.status === '審核未通過' ? 'bg-red-500/80 text-white' : 
+                          'bg-gray-500/80 text-white'
+                        }`}>
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          {project.status}
+                        </div>
+                      )}
+                    </div>
                   </div>
                   
                   <div className="p-6">
@@ -235,16 +237,6 @@ export default function ProjectPage() {
                         </svg>
                         下載所有檔案
                       </a>
-                      <button 
-                        onClick={() => deleteProject()} 
-                        disabled={isDeleting}
-                        className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors inline-flex items-center"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                        </svg>
-                        {isDeleting ? '刪除中...' : '刪除專案'}
-                      </button>
                     </div>
                   </div>
                 </div>

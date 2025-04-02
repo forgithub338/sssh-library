@@ -61,7 +61,7 @@ export default function Dashboard() {
                 love={userData ? userData.love : 0}
                 type={userData ? userData.type : "student"}
                 latestDate={userData ? userData.latestDate : ""}
-                latestProject={userData ? userData.latestProject : ""}
+                latestProject={userData ? userData.latestProject1.title : ""}
               />
 
               <UserStatics 
