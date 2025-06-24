@@ -42,14 +42,6 @@ export async function POST(request) {
       [status, reviewedBy, action === 'reject' ? reason : null, projectId]
     );
     
-    // 創建通知
-    
-    
-    // await connection.execute(
-    //   'INSERT INTO notifications (user_email, message, type, created_at, is_read) VALUES (?, ?, ?, NOW(), 0)',
-    //   [author, message, action === 'approve' ? 'project_approved' : 'project_rejected']
-    // );
-
     const subject = action === "approve" 
       ? `[松山高中成果分享網站] 您的專案已通過審核 🎉` 
       : `[松山高中成果分享網站] 您的專案未通過審核`;
@@ -57,8 +49,9 @@ export async function POST(request) {
     const html = action === "approve"
       ? `<p>親愛的使用者您好</p>
       <p>您的專案「${projectTitle}」已成功通過審核，現在已正式發布 🎉。</p>
-      <p>您可以前往網站查看您的專案：</p>
-      <a href="http://localhost:3000/projects/projectOverview/${projectId}">🔗 查看專案</a>
+      <span>您可以前往網站查看您的專案：
+        <a href="http://localhost:3000/projects/projectOverview/${projectId}">🔗 查看專案</a>
+      </span>
       <p>感謝您的分享，期待更多優秀的作品！</p>
       <p>松山高中成果分享網站 敬上</p>`
       : `<p>親愛的使用者您好</p>

@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { createConnection } from "../../../../lib/connectDB";
-import { uploadToCloudinary } from "@/../lib/uploadToCloudinary";
+import fs from "fs/promises";
+import path from "path";
+import {v4 as uuidv4} from "uuid";
+import { Recursive } from "next/font/google";
 
 export async function POST(req) {
   try {
@@ -22,11 +25,29 @@ export async function POST(req) {
     const videoUrls = [];
     const pdfUrls = [];
 
+    const setFileExtension = (folder) => {
+      switch(folder) {
+        case "images": return ".jpg";
+        case "videos": return ".mp4";
+        case "pdfs": return ".pdf";
+      }
+    }
+
+    const saveFile = async (file, folder) => {
+      const buffer = Buffer.from(await file.arrayBuffer())
+      const fileName = `${uuidv4()}_${file.name}`
+      const uploadDir = path.join(process.cwd(), "public", "uploads", folder)
+      await fs.mkdir(uploadDir, {recursive: true})
+      const filePath = path.join(uploadDir, fileName);
+      await fs.writeFile(filePath, buffer);
+      return `/uploads/${folder}/${fileName}`;
+    }
+
     // Process images
     const images = formData.getAll("images");
     for (const image of images) {
       if (image instanceof File) {
-        const url = await uploadToCloudinary(image, "images");
+        const url = await saveFile(image, "images");
         imageUrls.push(url);
       }
     }
@@ -35,7 +56,7 @@ export async function POST(req) {
     const videos = formData.getAll("videos");
     for (const video of videos) {
       if (video instanceof File) {
-        const url = await uploadToCloudinary(video, "videos");
+        const url = await saveFile(video, "videos");
         videoUrls.push(url);
       }
     }
@@ -48,7 +69,7 @@ export async function POST(req) {
           console.warn(`Invalid PDF file type: ${pdf.type}`);
           continue;
         }
-        const url = await uploadToCloudinary(pdf, "pdfs");
+        const url = await saveFile(pdf, "pdfs");
         pdfUrls.push(url);
       }
     }
