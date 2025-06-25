@@ -1,7 +1,8 @@
-import { createConnection } from "@/../lib/connectDB";
+import pool from "@/../lib/connectDB";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
+  const conn = await pool.getConnection();
   try {
     const { searchParams } = new URL(request.url);
     const email = searchParams.get('email');
@@ -10,8 +11,8 @@ export async function GET(request) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
     
-    const connection = await createConnection();
-    const [rows] = await connection.execute(
+    
+    const [rows] = await conn.execute(
       'SELECT position FROM users WHERE email = ?',
       [email]
     );
@@ -24,5 +25,7 @@ export async function GET(request) {
   } catch (error) {
     console.error("Error checking user role:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  } finally {
+    conn.release();
   }
 } 

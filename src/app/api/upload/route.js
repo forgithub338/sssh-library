@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import { createConnection } from "../../../../lib/connectDB";
+import pool from "@/../lib/connectDB";
 import fs from "fs/promises";
 import path from "path";
 import {v4 as uuidv4} from "uuid";
 import { Recursive } from "next/font/google";
 
 export async function POST(req) {
+  const conn = await pool.getConnection();
   try {
     const formData = await req.formData();
     
@@ -83,15 +84,15 @@ export async function POST(req) {
     const pdf = pdfUrls.length;
 
     // Save to database
-    const db = await createConnection();
-    const [result] = await db.execute(
+    ;
+    const [result] = await conn.execute(
       "INSERT INTO projects (author, title, description, date, view, love, img, video, pdf, type, section) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [author, title, description, mysqlDateTime, 0, 0, img, video, pdf, type, subject]
     );
     
     const projectId = result.insertId;
 
-    const [latestProject] = await db.execute(
+    const [latestProject] = await conn.execute(
       "SELECT * FROM users WHERE email = ?",
       [author]
     );
@@ -101,28 +102,28 @@ export async function POST(req) {
     const latestProject3 = latestProject[0].latestProject2;
     const latestProject4 = latestProject[0].latestProject3;
 
-    await db.execute(
+    await conn.execute(
       "UPDATE users SET project = ?, latestDate = ?, latestProject1 = ?, latestProject2 = ?, latestProject3 = ?, latestProject4 = ? WHERE email = ?",
       [project, mysqlDateTime, projectId, latestProject2, latestProject3, latestProject4, author]
     );
     
     // Save file references
     for (const url of imageUrls) {
-      await db.execute(
+      await conn.execute(
         "INSERT INTO upload_files (type, url, project_id) VALUES (?, ?, ?)",
         ['image', url, projectId]
       );
     }
     
     for (const url of videoUrls) {
-      await db.execute(
+      await conn.execute(
         "INSERT INTO upload_files (type, url, project_id) VALUES (?, ?, ?)",
         ['video', url, projectId]
       );
     }
     
     for (const url of pdfUrls) {
-      await db.execute(
+      await conn.execute(
         "INSERT INTO upload_files (type, url, project_id) VALUES (?, ?, ?)",
         ['pdf', url, projectId]
       );
@@ -142,5 +143,7 @@ export async function POST(req) {
       error: error.message,
       details: error.stack 
     }, { status: 500 });
+  } finally {
+    conn.release();
   }
 }

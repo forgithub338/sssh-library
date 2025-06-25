@@ -1,14 +1,15 @@
-import { createConnection } from "../../../../lib/connectDB"
+import pool from "@/../lib/connectDB";
 import { NextResponse } from "next/server";
 import { sign } from 'jsonwebtoken';
 
 export async function POST(request) {
   const { email, password } = await request.json()
   console.log(`Login attempt for: ${email}`);
+  const conn = await pool.getConnection();
   
   try {
-    const db = await createConnection()
-    const [rows] = await db.query("SELECT * FROM users WHERE email = ?", [email])
+    
+    const [rows] = await conn.query("SELECT * FROM users WHERE email = ?", [email])
     if(rows.length > 0 && rows[0].password === password) {
       console.log('Login successful, creating token');
       
@@ -47,5 +48,7 @@ export async function POST(request) {
   } catch(error) {
     console.error(`Login error: ${error}`);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 })
+  } finally {
+    conn.release();
   }
 }

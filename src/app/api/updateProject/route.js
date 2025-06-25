@@ -1,12 +1,13 @@
-import { createConnection } from "@/../lib/connectDB";
+import pool from "@/../lib/connectDB";
 import { NextResponse } from "next/server";
 import { uploadToCloudinary } from "@/../lib/uploadToCloudinary";
 import { cookies } from "next/headers";
 import { verify } from "jsonwebtoken";
 
 export async function POST(req) {
-  let connection;
-  
+
+  let conn
+
   try {
     const formData = await req.formData();
     
@@ -43,8 +44,8 @@ export async function POST(req) {
     }
     
     // 連接數據庫並驗證專案所有權
-    connection = await createConnection();
-    const [projectCheck] = await connection.execute(
+    conn = await pool.getConnection();
+    const [projectCheck] = await conn.execute(
       "SELECT author FROM projects WHERE project_id = ?",
       [projectId]
     );
@@ -96,13 +97,13 @@ export async function POST(req) {
     // 更新專案資訊
     const sectionValue = `${subject}-${interest}`;
     
-    await connection.execute(
+    await conn.execute(
       "UPDATE projects SET title = ?, description = ?, type = ?, section = ?, status = ? WHERE project_id = ?",
       [title, description, projectType, sectionValue, '審核中', projectId]
     );
     
     // 更新專案的媒體計數
-    const [currentCounts] = await connection.execute(
+    const [currentCounts] = await conn.execute(
       "SELECT img, video, pdf FROM projects WHERE project_id = ?",
       [projectId]
     );
@@ -111,28 +112,28 @@ export async function POST(req) {
     const updatedVideo = Number(currentCounts[0].video) + videoUrls.length;
     const updatedPdf = Number(currentCounts[0].pdf) + pdfUrls.length;
     
-    await connection.execute(
+    await conn.execute(
       "UPDATE projects SET img = ?, video = ?, pdf = ? WHERE project_id = ?",
       [updatedImg, updatedVideo, updatedPdf, projectId]
     );
     
     // 保存新上傳的檔案
     for (const url of imageUrls) {
-      await connection.execute(
+      await conn.execute(
         "INSERT INTO upload_files (type, url, project_id) VALUES (?, ?, ?)",
         ['image', url, projectId]
       );
     }
     
     for (const url of videoUrls) {
-      await connection.execute(
+      await conn.execute(
         "INSERT INTO upload_files (type, url, project_id) VALUES (?, ?, ?)",
         ['video', url, projectId]
       );
     }
     
     for (const url of pdfUrls) {
-      await connection.execute(
+      await conn.execute(
         "INSERT INTO upload_files (type, url, project_id) VALUES (?, ?, ?)",
         ['pdf', url, projectId]
       );
@@ -153,8 +154,6 @@ export async function POST(req) {
       details: error.stack
     }, { status: 500 });
   } finally {
-    if (connection) {
-      await connection.end();
-    }
+    conn.release();
   }
 } 

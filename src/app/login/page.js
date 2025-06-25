@@ -55,7 +55,7 @@ export default function Login() {
         } else {
           // 延遲導航，確保存儲完成
           setTimeout(() => {
-            window.location.href = '/dashboard';
+            window.location.href = '/watch';
           }, 300);
         }
       } else {

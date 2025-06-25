@@ -1,11 +1,12 @@
-import { createConnection } from '@/../lib/connectDB';
+import pool from '@/../lib/connectDB';
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { verify } from 'jsonwebtoken';
 
 export async function GET(request) {
-  let connection;
-  
+
+  let conn;
+
   try {
     // Get projectId from query
     const { searchParams } = new URL(request.url);
@@ -36,10 +37,10 @@ export async function GET(request) {
       }
       
       // Now proceed with the database query
-      connection = await createConnection();
+      conn = await pool.getConnection();
       
       // First verify this project belongs to the user
-      const [ownership] = await connection.execute(
+      const [ownership] = await conn.execute(
         'SELECT COUNT(*) as count FROM projects WHERE project_id = ? AND author = ?',
         [projectId, email]
       );
@@ -47,9 +48,9 @@ export async function GET(request) {
       if (ownership[0].count === 0) {
         return NextResponse.json({ error: 'You do not have permission to view this project' }, { status: 403 });
       }
-    }else if(method === 'admin'){
-      connection = await createConnection();
-      const [admin] = await connection.execute(
+    } else if(method === 'admin'){
+      conn = await pool.getConnection();
+      const [admin] = await conn.execute(
         'SELECT * FROM users WHERE email = ?',
         [email]
       );
@@ -60,14 +61,14 @@ export async function GET(request) {
     }
     
     // Query projects for the user
-    const [result] = await connection.execute(
+    const [result] = await conn.execute(
       'SELECT * FROM projects WHERE project_id = ?',
       [projectId]
     );
 
     const project = result[0];
 
-    const [files] = await connection.execute(
+    const [files] = await conn.execute(
       'SELECT type, url FROM upload_files WHERE project_id = ?',
       [project.project_id]
     );
@@ -78,6 +79,6 @@ export async function GET(request) {
     console.error('Error fetching projects:', error);
     return NextResponse.json({ error: 'Failed to fetch projects' }, { status: 500 });
   } finally {
-    // Close connection
+    conn.release();
   }
 }

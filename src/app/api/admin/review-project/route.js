@@ -1,8 +1,9 @@
-import { createConnection } from "@/../lib/connectDB";
-import { NextResponse } from "next/server";
+import pool from "@/../lib/connectDB";
+import { connection, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 export async function POST(request) {
+  const conn = await pool.getConnection();
   try {
     const { projectId, action, reason, reviewedBy } = await request.json();
 
@@ -19,10 +20,9 @@ export async function POST(request) {
       return NextResponse.json({ error: "Rejection reason is required" }, { status: 400 });
     }
     
-    const connection = await createConnection();
     
     // 獲取專案作者信息
-    const [projectRows] = await connection.execute(
+    const [projectRows] = await conn.execute(
       'SELECT author, title FROM projects WHERE project_id = ?',
       [projectId]
     );
@@ -37,7 +37,7 @@ export async function POST(request) {
     
     // 更新專案狀態
     const status = action === 'approve' ? '審核通過' : '審核未通過';
-    await connection.execute(
+    await conn.execute(
       'UPDATE projects SET status = ?, reviewed_by = ?, rejection_reason = ? WHERE project_id = ?',
       [status, reviewedBy, action === 'reject' ? reason : null, projectId]
     );
@@ -90,5 +90,7 @@ export async function POST(request) {
   } catch (error) {
     console.error(`Error reviewing project:`, error);
     return NextResponse.json({ error: error.message }, { status: 500 });
+  } finally {
+    conn.release();
   }
 } 

@@ -36,7 +36,7 @@ export default function UserInformation(props) {
                   <div className="flex items-center">
                     <div className="h-20 w-20 rounded-full bg-white p-1">
                       <div className="h-full w-full rounded-full bg-[#9B1B30] flex items-center justify-center text-white text-2xl font-bold">
-                        {props.name.charAt(0)}
+                        {props.name?.charAt(0) || "?"}
                       </div>
                     </div>
                     <div className="ml-6">

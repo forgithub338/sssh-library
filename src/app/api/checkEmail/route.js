@@ -1,11 +1,12 @@
-import { createConnection } from "../../../../lib/connectDB"
+import pool from "@/../lib/connectDB";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
   const { email } = await request.json()
+  const conn = await pool.getConnection();
   try {
-    const db = await createConnection()
-    const [rows] = await db.query("SELECT * FROM users WHERE email = ?", [email])
+    
+    const [rows] = await conn.execute("SELECT * FROM users WHERE email = ?", [email])
     if (rows.length > 0) {
       return NextResponse.json({ exists: true });
     } else {
@@ -14,5 +15,7 @@ export async function POST(request) {
   } catch(error) {
     console.log(`error: ${error}`)
     return NextResponse.json({error: error.message})
+  } finally {
+    conn.release();
   }
 }

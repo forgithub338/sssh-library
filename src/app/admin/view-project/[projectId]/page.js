@@ -57,30 +57,6 @@ export default function ProjectPage() {
     return new Date(dateString).toLocaleDateString('zh-TW', options);
   };
 
-  // Function to delete project
-  const deleteProject = async () => {
-    if (window.confirm('確定要刪除此專案嗎？此操作無法復原。')) {
-      try {
-        setIsDeleting(true);
-        const response = await fetch(`/api/deleteProject?project=${JSON.stringify(project)}`, {
-          method: 'POST', 
-        });
-
-        if (!response.ok) {
-          throw new Error(`刪除失敗: ${response.status}`);
-        }
-
-        // Redirect to projects page after successful deletion
-        router.push('/projects');
-      } catch (err) {
-        console.error("Error deleting project:", err);
-        alert(`刪除失敗: ${err.message}`);
-      } finally {
-        setIsDeleting(false);
-      }
-    }
-  };
-
   return (
     <div className="flex h-screen bg-[#FAF3E0]">
       <SideBarMedia sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />

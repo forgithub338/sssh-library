@@ -1,8 +1,9 @@
-import { createConnection } from "../../../../lib/connectDB"
+import pool from "@/../lib/connectDB";
 import { NextResponse } from "next/server";
 import { sign } from 'jsonwebtoken';
 
 export async function POST(request) {
+  const conn = await pool.getConnection();
   try {
     const { email, password } = await request.json();
     console.log(`Changing password for: ${email}`);
@@ -14,8 +15,8 @@ export async function POST(request) {
       }, { status: 400 });
     }
     
-    const db = await createConnection();
-    await db.query(
+    
+    await conn.execute(
       "UPDATE users SET password = ?, alterPassWord = 1 WHERE email = ?", 
       [password, email]
     );
@@ -30,5 +31,7 @@ export async function POST(request) {
       success: false, 
       error: error.message 
     }, { status: 500 });
+  } finally {
+    conn.release()
   }
 }
