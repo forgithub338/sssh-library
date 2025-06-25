@@ -2,10 +2,13 @@ import { NextResponse } from 'next/server';
 
 // Protected routes that require authentication
 const protectedPaths = [
+  '/admin/review-projects',
+  '/admin/view-project',
   '/dashboard',
+  '/edit-project',
   '/projects',
   '/upload',
-  '/admin/review-projects'
+  '/watch'
 ];
 
 // Public paths that should always be accessible

@@ -11,7 +11,7 @@ export default function getNavigation(position) {
   const baseNavigation = [
     {
       name: '首頁',
-      href: '/',
+      href: '/watch',
       icon: HomeIcon,
     },
     {

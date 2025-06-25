@@ -56,12 +56,12 @@ export default function Dashboard() {
               
               {console.log(userData)}
               <UserInformation 
-                name={userData ? userData.name : ""}  
-                project={userData ? userData.project : 0} 
-                love={userData ? userData.love : 0}
-                type={userData ? userData.type : "student"}
-                latestDate={userData ? userData.latestDate : ""}
-                latestProject={userData ? userData.latestProject1.title : ""}
+                name={userData ? userData?.name : ""}  
+                project={userData ? userData?.project : 0} 
+                love={userData ? userData?.love : 0}
+                type={userData ? userData?.type : "student"}
+                latestDate={userData ? userData?.latestDate : ""}
+                latestProject={userData ? userData?.latestProject1?.title : ""}
               />
 
               <UserStatics 
