@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { XMarkIcon, DocumentIcon, PhotoIcon, VideoCameraIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, DocumentIcon, PhotoIcon, VideoCameraIcon, Bars3Icon } from '@heroicons/react/24/outline';
 import SideBarMedia from '../../../components/ui/sideBarMedia';
 import SideBarDesktop from '../../../components/ui/sideBarDesktop';
 import getUserEmail from '../../../lib/getUserEmail';
@@ -269,21 +269,40 @@ export default function Upload() {
       <SideBarDesktop />
 
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
+        {/* 手機版頂部導航欄 */}
+        <div className="md:hidden flex items-center justify-between bg-white px-4 py-3 shadow-sm border-b">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="text-gray-500 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#1E3A8A]"
+          >
+            <Bars3Icon className="h-6 w-6" />
+          </button>
+          <h1 className="text-lg font-semibold text-[#1E3A8A]">學習成果上傳</h1>
+          <div className="w-6"></div> {/* 佔位符，保持標題居中 */}
+        </div>
+
         <main className="flex-1 relative overflow-y-auto focus:outline-none">
-          <div className="py-6">
-            <div className="max-w-3xl mx-auto px-4 sm:px-6 md:px-8">
+          <div className="py-4 md:py-6">
+            <div className="max-w-3xl mx-auto px-3 sm:px-6 md:px-8">
               {/* 整合標題和表單，使用相同的背景色 */}
               <div className="bg-white rounded-xl shadow-md overflow-hidden">
-                {/* 標題區域 */}
-                <div style={{background: 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}} className="p-6 text-white">
-                  <h1 className="text-2xl font-bold text-center">學習成果上傳</h1>
-                  <div className="h-1 w-24 bg-white/50 mt-2 mx-auto rounded-full"></div>
-                  <p className="text-white text-center mt-2">分享您的學習旅程和成就</p>
+                {/* 桌面版標題區域 */}
+                <div className="hidden md:block" style={{background: 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}} >
+                  <div className="p-6 text-white">
+                    <h1 className="text-2xl font-bold text-center">學習成果上傳</h1>
+                    <div className="h-1 w-24 bg-white/50 mt-2 mx-auto rounded-full"></div>
+                    <p className="text-white text-center mt-2">分享您的學習旅程和成就</p>
+                  </div>
+                </div>
+                
+                {/* 手機版簡化標題 */}
+                <div className="md:hidden bg-gradient-to-r from-[#1E3A8A] to-[#2D4A9A] p-4 text-white text-center">
+                  <p className="text-sm opacity-90">分享您的學習旅程和成就</p>
                 </div>
                 
                 {/* 表單區域 */}
-                <div className="p-6">
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="p-4 md:p-6">
+                  <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                     {/* 標題和描述 */}
                     <div>
                       <label className="block text-sm font-medium text-[#333333] mb-2">作品標題</label>
@@ -292,7 +311,7 @@ export default function Upload() {
                         name="title"
                         value={formData.title}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
+                        className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] text-sm md:text-base"
                         placeholder="請輸入作品標題"
                       />
                       {errors.title && (
@@ -306,20 +325,20 @@ export default function Upload() {
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
-                        rows={4}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
+                        rows={3}
+                        className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] text-sm md:text-base resize-none"
                         placeholder="請描述您的作品..."
                       />
                     </div>
                     
-                    {/* 成果類型獨立一排 */}
+                    {/* 成果類型 */}
                     <div>
                       <label className="block text-sm font-medium text-[#333333] mb-2">成果類型</label>
                       <select
                         name="projectType"
                         value={formData.projectType}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
+                        className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] text-sm md:text-base"
                       >
                         <option value="">請選擇成果類型</option>
                         {projectTypes.map((type) => (
@@ -333,15 +352,15 @@ export default function Upload() {
                       )}
                     </div>
                     
-                    {/* 成果領域和專業領域一排 */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* 成果領域和專業領域 - 手機版堆疊 */}
+                    <div className="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
                       <div>
                         <label className="block text-sm font-medium text-[#333333] mb-2">成果領域</label>
                         <select
                           name="subject"
                           value={formData.subject}
                           onChange={handleChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
+                          className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] text-sm md:text-base"
                         >
                           <option value="">請選擇學科領域</option>
                           {subjectAreas.map((subject) => (
@@ -361,9 +380,9 @@ export default function Upload() {
                           name="interest"
                           value={formData.interest}
                           onChange={handleChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
+                          className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] text-sm md:text-base"
                           disabled={!selectedSubject}
-                          style={{backgroundColor: selectedSubject ? 'white' : '#666'}}
+                          style={{backgroundColor: selectedSubject ? 'white' : '#f3f4f6'}}
                         >
                           <option value="">請選擇專業領域</option>
                           {interestOptions.map((interest) => (
@@ -378,19 +397,19 @@ export default function Upload() {
                       </div>
                     </div>
                     
-                    {/* 圖片上傳區塊 */}
-                    <div className="bg-white border border-gray-200 rounded-xl p-4 transition-all hover:shadow-md">
+                    {/* 圖片上傳區塊 - 手機版優化 */}
+                    <div className="bg-white border border-gray-200 rounded-xl p-3 md:p-4 transition-all hover:shadow-md">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center">
-                          <PhotoIcon className="h-5 w-5 text-[#1E3A8A] mr-2" />
-                          <h3 className="font-medium text-[#333333]">圖片檔案</h3>
+                          <PhotoIcon className="h-4 w-4 md:h-5 md:w-5 text-[#1E3A8A] mr-2" />
+                          <h3 className="font-medium text-[#333333] text-sm md:text-base">圖片檔案</h3>
                         </div>
-                        <span className="text-xs text-gray-500">最大 5MB/張</span>
+                        <span className="text-xs text-gray-500">max 5MB</span>
                       </div>
                       
                       <div 
                         onClick={() => imageInputRef.current?.click()}
-                        className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors"
+                        className="border-2 border-dashed border-gray-300 rounded-lg p-3 md:p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors"
                       >
                         <input
                           ref={imageInputRef}
@@ -400,9 +419,9 @@ export default function Upload() {
                           className="hidden"
                           onChange={handleImageUpload}
                         />
-                        <PhotoIcon className="h-8 w-8 mx-auto text-gray-400" />
-                        <p className="mt-2 text-sm text-gray-500">點擊上傳圖片</p>
-                        <p className="text-xs text-gray-400 mt-1">支援 JPEG, PNG, GIF 等格式</p>
+                        <PhotoIcon className="h-6 w-6 md:h-8 md:w-8 mx-auto text-gray-400" />
+                        <p className="mt-2 text-xs md:text-sm text-gray-500">點擊上傳圖片</p>
+                        <p className="text-xs text-gray-400 mt-1 hidden md:block">支援 JPEG, PNG, GIF 等格式</p>
                       </div>
                       
                       {errors.images && (
@@ -410,13 +429,13 @@ export default function Upload() {
                       )}
                       
                       {formData.images.length > 0 && (
-                        <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        <div className="mt-3 grid grid-cols-3 md:grid-cols-3 gap-2 md:gap-3">
                           {formData.images.map((file, index) => (
                             <div key={index} className="relative group">
                               <img 
                                 src={URL.createObjectURL(file)} 
                                 alt={file.name}
-                                className="h-24 w-full object-cover rounded-md" 
+                                className="h-16 md:h-24 w-full object-cover rounded-md" 
                               />
                               <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md">
                                 <button
@@ -424,29 +443,29 @@ export default function Upload() {
                                   onClick={() => removeFile('images', index)}
                                   className="text-white hover:text-red-300 p-1"
                                 >
-                                  <XMarkIcon className="h-6 w-6" />
+                                  <XMarkIcon className="h-4 w-4 md:h-6 md:w-6" />
                                 </button>
                               </div>
-                              <p className="text-xs text-gray-500 truncate mt-1">{file.name}</p>
+                              <p className="text-xs text-gray-500 truncate mt-1 hidden md:block">{file.name}</p>
                             </div>
                           ))}
                         </div>
                       )}
                     </div>
                     
-                    {/* 視頻上傳區塊 */}
-                    <div className="bg-white border border-gray-200 rounded-xl p-4 transition-all hover:shadow-md">
+                    {/* 視頻上傳區塊 - 手機版優化 */}
+                    <div className="bg-white border border-gray-200 rounded-xl p-3 md:p-4 transition-all hover:shadow-md">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center">
-                          <VideoCameraIcon className="h-5 w-5 text-[#1E3A8A] mr-2" />
-                          <h3 className="font-medium text-[#333333]">影片檔案</h3>
+                          <VideoCameraIcon className="h-4 w-4 md:h-5 md:w-5 text-[#1E3A8A] mr-2" />
+                          <h3 className="font-medium text-[#333333] text-sm md:text-base">影片檔案</h3>
                         </div>
-                        <span className="text-xs text-gray-500">最大 100MB/個</span>
+                        <span className="text-xs text-gray-500">max 100MB</span>
                       </div>
                       
                       <div 
                         onClick={() => videoInputRef.current?.click()}
-                        className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors"
+                        className="border-2 border-dashed border-gray-300 rounded-lg p-3 md:p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors"
                       >
                         <input
                           ref={videoInputRef}
@@ -456,9 +475,9 @@ export default function Upload() {
                           className="hidden"
                           onChange={handleVideoUpload}
                         />
-                        <VideoCameraIcon className="h-8 w-8 mx-auto text-gray-400" />
-                        <p className="mt-2 text-sm text-gray-500">點擊上傳影片</p>
-                        <p className="text-xs text-gray-400 mt-1">支援 MP4, MOV, AVI 等格式</p>
+                        <VideoCameraIcon className="h-6 w-6 md:h-8 md:w-8 mx-auto text-gray-400" />
+                        <p className="mt-2 text-xs md:text-sm text-gray-500">點擊上傳影片</p>
+                        <p className="text-xs text-gray-400 mt-1 hidden md:block">支援 MP4, MOV, AVI 等格式</p>
                       </div>
                       
                       {errors.videos && (
@@ -471,18 +490,18 @@ export default function Upload() {
                           <div className="space-y-2">
                             {formData.videos.map((file, index) => (
                               <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded-md">
-                                <div className="flex items-center overflow-hidden">
-                                  <VideoCameraIcon className="h-5 w-5 text-gray-400 mr-2 flex-shrink-0" />
-                                  <p className="text-sm text-gray-500 truncate">{file.name}</p>
+                                <div className="flex items-center overflow-hidden min-w-0 flex-1">
+                                  <VideoCameraIcon className="h-4 w-4 md:h-5 md:w-5 text-gray-400 mr-2 flex-shrink-0" />
+                                  <p className="text-xs md:text-sm text-gray-500 truncate">{file.name}</p>
                                 </div>
-                                <div className="flex items-center ml-2">
+                                <div className="flex items-center ml-2 flex-shrink-0">
                                   <span className="text-xs text-gray-400 mr-2">{formatFileSize(file.size)}</span>
                                   <button
                                     type="button"
                                     onClick={() => removeFile('videos', index)}
                                     className="text-[#9B1B30] hover:text-red-700 p-1"
                                   >
-                                    <XMarkIcon className="h-4 w-4" />
+                                    <XMarkIcon className="h-3 w-3 md:h-4 md:w-4" />
                                   </button>
                                 </div>
                               </div>
@@ -492,19 +511,19 @@ export default function Upload() {
                       )}
                     </div>
                     
-                    {/* PDF上傳區塊 */}
-                    <div className="bg-white border border-gray-200 rounded-xl p-4 transition-all hover:shadow-md">
+                    {/* PDF上傳區塊 - 手機版優化 */}
+                    <div className="bg-white border border-gray-200 rounded-xl p-3 md:p-4 transition-all hover:shadow-md">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center">
-                          <DocumentIcon className="h-5 w-5 text-[#1E3A8A] mr-2" />
-                          <h3 className="font-medium text-[#333333]">文件檔案</h3>
+                          <DocumentIcon className="h-4 w-4 md:h-5 md:w-5 text-[#1E3A8A] mr-2" />
+                          <h3 className="font-medium text-[#333333] text-sm md:text-base">文件檔案</h3>
                         </div>
-                        <span className="text-xs text-gray-500">最大 20MB/個</span>
+                        <span className="text-xs text-gray-500">max 20MB</span>
                       </div>
                       
                       <div 
                         onClick={() => pdfInputRef.current?.click()}
-                        className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors"
+                        className="border-2 border-dashed border-gray-300 rounded-lg p-3 md:p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors"
                       >
                         <input
                           ref={pdfInputRef}
@@ -514,9 +533,9 @@ export default function Upload() {
                           className="hidden"
                           onChange={handlePdfUpload}
                         />
-                        <DocumentIcon className="h-8 w-8 mx-auto text-gray-400" />
-                        <p className="mt-2 text-sm text-gray-500">點擊上傳PDF文件</p>
-                        <p className="text-xs text-gray-400 mt-1">僅支援PDF格式</p>
+                        <DocumentIcon className="h-6 w-6 md:h-8 md:w-8 mx-auto text-gray-400" />
+                        <p className="mt-2 text-xs md:text-sm text-gray-500">點擊上傳PDF文件</p>
+                        <p className="text-xs text-gray-400 mt-1 hidden md:block">僅支援PDF格式</p>
                       </div>
                       
                       {errors.pdfs && (
@@ -529,18 +548,18 @@ export default function Upload() {
                           <div className="space-y-2">
                             {formData.pdfs.map((file, index) => (
                               <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded-md">
-                                <div className="flex items-center overflow-hidden">
-                                  <DocumentIcon className="h-5 w-5 text-gray-400 mr-2 flex-shrink-0" />
-                                  <p className="text-sm text-gray-500 truncate">{file.name}</p>
+                                <div className="flex items-center overflow-hidden min-w-0 flex-1">
+                                  <DocumentIcon className="h-4 w-4 md:h-5 md:w-5 text-gray-400 mr-2 flex-shrink-0" />
+                                  <p className="text-xs md:text-sm text-gray-500 truncate">{file.name}</p>
                                 </div>
-                                <div className="flex items-center ml-2">
+                                <div className="flex items-center ml-2 flex-shrink-0">
                                   <span className="text-xs text-gray-400 mr-2">{formatFileSize(file.size)}</span>
                                   <button
                                     type="button"
                                     onClick={() => removeFile('pdfs', index)}
                                     className="text-[#9B1B30] hover:text-red-700 p-1"
                                   >
-                                    <XMarkIcon className="h-4 w-4" />
+                                    <XMarkIcon className="h-3 w-3 md:h-4 md:w-4" />
                                   </button>
                                 </div>
                               </div>
@@ -552,7 +571,7 @@ export default function Upload() {
                     
                     {/* 提交錯誤 */}
                     {errors.submit && (
-                      <div className="bg-red-50 text-[#9B1B30] p-3 rounded-md">
+                      <div className="bg-red-50 text-[#9B1B30] p-3 rounded-md text-sm">
                         {errors.submit}
                       </div>
                     )}
@@ -563,7 +582,7 @@ export default function Upload() {
                         type="submit"
                         disabled={isSubmitting}
                         style={{background: isSubmitting ? '#B0B0B0' : 'linear-gradient(to right, #1E3A8A, #2D4A9A)'}}
-                        className="w-full py-3 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
+                        className="w-full py-3 md:py-4 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 relative overflow-hidden group text-sm md:text-base"
                         onMouseOver={(e) => !isSubmitting && (e.currentTarget.style.background = 'linear-gradient(to right, #9B1B30, #9B1B30)')}
                         onMouseOut={(e) => !isSubmitting && (e.currentTarget.style.background = 'linear-gradient(to right, #1E3A8A, #2D4A9A)')}
                       >
@@ -581,5 +600,3 @@ export default function Upload() {
     </div>
   );
 }
-
-

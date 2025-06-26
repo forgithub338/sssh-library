@@ -77,10 +77,10 @@ export default function Dashboard() {
                 latestProject4={userData ? userData.latestProject4 : ""}
               />
 
-              <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-2">
+              {/* <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-2">
                 <UserFeedback />
                 <UserInspiration />
-              </div>
+              </div> */}
 
               <QuickActions />
             </div>
