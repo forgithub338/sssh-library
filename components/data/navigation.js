@@ -3,7 +3,8 @@ import {
   UserCircleIcon,
   DocumentTextIcon,
   ArrowUpTrayIcon,
-  ClipboardDocumentCheckIcon
+  ClipboardDocumentCheckIcon,
+  UserPlusIcon
 } from '@heroicons/react/24/outline';
 
 export default function getNavigation(position) {
@@ -39,6 +40,11 @@ export default function getNavigation(position) {
         name: '待審核專案',
         href: '/admin/review-projects',
         icon: ClipboardDocumentCheckIcon,
+      },
+      {
+        name: '新增使用者',
+        href: '/admin/add-user',
+        icon: UserPlusIcon,
       }
     ];
   }

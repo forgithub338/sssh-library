@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect, useRef } from 'react';
 import getUserEmail from '@/../lib/getUserEmail';
+import getUserPosition from '../../../lib/getUserPosition';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { XMarkIcon, DocumentIcon, PhotoIcon, VideoCameraIcon } from '@heroicons/react/24/outline';
 import { projectTypes, subjectAreas } from '@/../components/data/interestArea';
@@ -10,6 +11,7 @@ import SideBarDesktop from '@/../components/ui/sideBarDesktop';
 export default function EditProject() {
   const router = useRouter();
   const email = getUserEmail();
+  const position = getUserPosition();
   const searchParams = useSearchParams();
   const projectId = searchParams.get('projectId');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -330,8 +332,8 @@ export default function EditProject() {
 
   return (
     <div className="flex h-screen bg-[#FAF3E0]">
-      <SideBarMedia sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <SideBarDesktop />
+      <SideBarMedia sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} position={position} />
+      <SideBarDesktop position={position} />
 
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
         <main className="flex-1 relative overflow-y-auto focus:outline-none">

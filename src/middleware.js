@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 
 // Protected routes that require authentication
 const protectedPaths = [
+  '/',
+  'admin/add-user',
   '/admin/review-projects',
   '/admin/view-project',
   '/dashboard',
@@ -16,7 +18,6 @@ const publicPaths = [
   '/login',
   '/signUp',
   '/verify',
-  '/',
   '/api',
   '/changePassword',
   '/test'

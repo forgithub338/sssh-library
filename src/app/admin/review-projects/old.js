@@ -11,8 +11,7 @@ import {
   EyeIcon,
   DocumentTextIcon,
   PhotoIcon,
-  VideoCameraIcon,
-  Bars3Icon
+  VideoCameraIcon
 } from "@heroicons/react/24/outline";
 
 export default function ReviewProjects() {
@@ -149,56 +148,34 @@ export default function ReviewProjects() {
       <SideBarDesktop />
 
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
-        {/* 手機版頂部欄 */}
-        <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center">
-            <button
-              className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#1E3A8A]"
-              onClick={() => setSidebarOpen(true)}
-            >
-              <span className="sr-only">打開側邊欄</span>
-              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-            </button>
-            <h1 className="ml-3 text-lg font-semibold text-[#333333]">待審核專案</h1>
-          </div>
-        </div>
-
-        <main className="flex-1 relative overflow-y-auto focus:outline-none">
-          <div className="py-3 md:py-6">
-            {/* 桌面版標題 */}
-            <div className="hidden md:block max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+        <main className="flex-1 relative overflow-y-auto focus:outline-none p-6">
+          <div className="py-6">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
               <h1 className="text-2xl font-semibold text-[#333333]">待審核專案</h1>
               <p className="mt-1 text-sm text-[#B0B0B0]">審核用戶上傳的專案，決定是否批准發布</p>
             </div>
 
-            <div className="max-w-7xl mx-auto px-3 md:px-4 sm:px-6 md:px-8 mt-3 md:mt-6">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mt-6">
               {loading ? (
                 <div className="flex justify-center items-center py-12">
                   <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1E3A8A]"></div>
                 </div>
               ) : projects.length === 0 ? (
-                <div className="text-center py-8 md:py-12 bg-white rounded-xl shadow mx-2 md:mx-0">
-                  <DocumentTextIcon className="mx-auto h-10 w-10 md:h-12 md:w-12 text-[#B0B0B0]" />
-                  <h3 className="mt-2 text-base md:text-lg font-medium text-[#333333]">沒有待審核的專案</h3>
-                  <p className="mt-1 text-sm text-[#B0B0B0]">目前沒有需要審核的專案</p>
+                <div className="text-center py-12 bg-white rounded-xl shadow">
+                  <DocumentTextIcon className="mx-auto h-12 w-12 text-[#B0B0B0]" />
+                  <h3 className="mt-2 text-lg font-medium text-[#333333]">沒有待審核的專案</h3>
+                  <p className="mt-1 text-[#B0B0B0]">目前沒有需要審核的專案</p>
                 </div>
               ) : (
-                <div className="bg-white shadow rounded-xl overflow-hidden mx-2 md:mx-0">
-                  {/* 標題欄 - 手機版簡化 */}
-                  <div className="px-3 md:px-6 py-3 md:py-4 border-b border-gray-200">
-                    <h2 className="text-base md:text-lg font-medium text-[#333333]">
-                      <span className="hidden sm:inline">待審核專案清單 </span>
-                      <span className="sm:hidden">專案清單 </span>
-                      ({projects.length})
-                    </h2>
+                <div className="bg-white shadow rounded-xl overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-200">
+                    <h2 className="text-lg font-medium text-[#333333]">待審核專案清單 ({projects.length})</h2>
                   </div>
                   
-                  {/* 專案列表 */}
-                  <div className="divide-y divide-gray-200">
+                  <ul className="divide-y divide-gray-200">
                     {projects.map((project) => (
-                      <div key={project.project_id} className="px-3 md:px-6 py-4 md:py-5 hover:bg-gray-50 transition-colors">
-                        {/* 桌面版佈局 */}
-                        <div className="hidden md:flex md:items-center md:justify-between">
+                      <li key={project.project_id} className="px-6 py-5 hover:bg-gray-50 transition-colors">
+                        <div className="flex items-center justify-between">
                           <div className="flex-1 min-w-0">
                             <h3 className="text-lg font-medium text-[#333333] truncate">{project.title}</h3>
                             <div className="mt-1 flex items-center">
@@ -265,93 +242,9 @@ export default function ReviewProjects() {
                             </button>
                           </div>
                         </div>
-
-                        {/* 手機版佈局 */}
-                        <div className="md:hidden">
-                          <div className="space-y-3">
-                            {/* 專案基本資訊 */}
-                            <div>
-                              <h3 className="text-base font-medium text-[#333333] leading-tight">{project.title}</h3>
-                              <div className="mt-1 space-y-1">
-                                <p className="text-sm text-[#B0B0B0]">
-                                  作者: {project.author_name || project.author}
-                                </p>
-                                <p className="text-sm text-[#B0B0B0]">
-                                  {formatDate(project.date)}
-                                </p>
-                              </div>
-                            </div>
-
-                            {/* 描述 */}
-                            {project.description && (
-                              <p className="text-sm text-[#333333] line-clamp-3">
-                                {project.description}
-                              </p>
-                            )}
-
-                            {/* 標籤 */}
-                            <div className="flex flex-wrap gap-2">
-                              {project.type && (
-                                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-[#FAF3E0] text-[#1E3A8A]">
-                                  {project.type}
-                                </span>
-                              )}
-                              {project.section && (
-                                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-[#1E3A8A]">
-                                  {project.section}
-                                </span>
-                              )}
-                            </div>
-
-                            {/* 媒體統計 */}
-                            <div className="grid grid-cols-3 gap-2 text-xs text-[#B0B0B0]">
-                              <div className="flex items-center">
-                                <PhotoIcon className="h-3 w-3 mr-1" />
-                                {project.img} 照片
-                              </div>
-                              <div className="flex items-center">
-                                <VideoCameraIcon className="h-3 w-3 mr-1" />
-                                {project.video} 影片
-                              </div>
-                              <div className="flex items-center">
-                                <DocumentTextIcon className="h-3 w-3 mr-1" />
-                                {project.pdf} 文件
-                              </div>
-                            </div>
-
-                            {/* 操作按鈕 */}
-                            <div className="flex flex-col space-y-2 pt-2">
-                              <button
-                                onClick={() => router.push(`/admin/view-project/${project.project_id}`)}
-                                className="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-[#333333] bg-white hover:bg-gray-50 focus:outline-none"
-                              >
-                                <EyeIcon className="h-4 w-4 mr-2" />
-                                查看專案詳情
-                              </button>
-                              <div className="grid grid-cols-2 gap-2">
-                                <button
-                                  onClick={() => openModal(project, 'approve')}
-                                  className={`inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none ${processingId === project.project_id ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                  disabled={processingId === project.project_id}
-                                >
-                                  <CheckCircleIcon className="h-4 w-4 mr-1" />
-                                  通過
-                                </button>
-                                <button
-                                  onClick={() => openModal(project, 'reject')}
-                                  className={`inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#9B1B30] hover:bg-red-700 focus:outline-none ${processingId === project.project_id ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                  disabled={processingId === project.project_id}
-                                >
-                                  <XCircleIcon className="h-4 w-4 mr-1" />
-                                  拒絕
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               )}
             </div>
@@ -359,7 +252,7 @@ export default function ReviewProjects() {
         </main>
       </div>
 
-      {/* 審核確認對話框 - 優化手機版 */}
+      {/* 審核確認對話框 */}
       {isModalOpen && currentProject && (
         <div className="fixed inset-0 overflow-y-auto z-50">
           <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -369,7 +262,7 @@ export default function ReviewProjects() {
 
             <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full w-full max-w-sm">
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                   <div className={`mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10 ${action === 'approve' ? 'bg-green-100' : 'bg-red-100'}`}>
@@ -398,7 +291,7 @@ export default function ReviewProjects() {
                           <textarea
                             id="reject-reason"
                             rows="3"
-                            className="shadow-sm mt-1 block w-full text-sm border border-gray-300 rounded-md p-2 focus:ring-[#1E3A8A] focus:border-[#1E3A8A] text-[#000]"
+                            className="shadow-sm mt-1 block w-full sm:text-sm border border-gray-300 rounded-md p-2 focus:ring-[#1E3A8A] focus:border-[#1E3A8A]"
                             placeholder="請說明拒絕此專案的原因..."
                             value={rejectReason}
                             onChange={(e) => setRejectReason(e.target.value)}
@@ -413,7 +306,7 @@ export default function ReviewProjects() {
                   </div>
                 </div>
               </div>
-              <div className="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col sm:flex-row-reverse gap-3 sm:gap-0">
+              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button
                   type="button"
                   onClick={handleProjectAction}
@@ -438,7 +331,7 @@ export default function ReviewProjects() {
                   type="button"
                   onClick={closeModal}
                   disabled={processingId !== null}
-                  className={`w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-[#333333] hover:bg-gray-50 focus:ring-gray-200 sm:w-auto sm:text-sm ${processingId !== null ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-[#333333] hover:bg-gray-50 focus:ring-gray-200 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm ${processingId !== null ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   取消
                 </button>
@@ -449,4 +342,4 @@ export default function ReviewProjects() {
       )}
     </div>
   );
-}
+} 

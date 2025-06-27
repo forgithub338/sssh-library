@@ -2,11 +2,11 @@ import navigationBasic from "../data/navigation";
 import { useRouter } from 'next/navigation';
 import getUserEmail from '@/../lib/getUserEmail';
 
-const navigation = navigationBasic("管理者")
 
-export default function SideBarDesktop() {
+export default function SideBarDesktop(props) {
   const router = useRouter();
   const email = getUserEmail();
+  const navigation = navigationBasic(props.position)
 
   return (
     <div className="hidden md:flex md:flex-shrink-0">

@@ -17,7 +17,10 @@ export async function POST(request) {
       const secretKey = process.env.JWT_SECRET || '1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef';
       
       const token = sign(
-        { email: rows[0].email },
+        { 
+          email: rows[0].email,
+          position: rows[0].position
+        },
         secretKey,
         { expiresIn: '24h' }
       );

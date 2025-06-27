@@ -13,6 +13,6 @@ export async function GET() {
     console.error("Error fetching pending projects:", error);
     return NextResponse.json({ error: "Failed to fetch pending projects" }, { status: 500 });
   } finally {
-    conn.release();
+    await conn.release();
   }
 } 

@@ -5,11 +5,13 @@ import { useRouter } from 'next/navigation';
 import SideBarMedia from '../../../components/ui/sideBarMedia';
 import SideBarDesktop from '../../../components/ui/sideBarDesktop';
 import getUserEmail from '../../../lib/getUserEmail';
+import getUserPosition from '../../../lib/getUserPosition';
 import { DocumentTextIcon, Bars3Icon } from "@heroicons/react/24/outline";
 
 export default function ProjectsPage() {
   const router = useRouter();
   const email = getUserEmail();
+  const position = getUserPosition();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -79,8 +81,8 @@ export default function ProjectsPage() {
   
   return (
     <div className="flex h-screen bg-[#FAF3E0]">
-      <SideBarMedia sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <SideBarDesktop />
+      <SideBarMedia sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} position={position} />
+      <SideBarDesktop position={position} />
 
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
         {/* Mobile Header */}

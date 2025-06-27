@@ -85,7 +85,7 @@ export default function Login() {
               type="email"
               name="email"
               placeholder="請使用學校email登入"
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] bg-gray-50 focus:bg-white transition-all"
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] bg-gray-50 focus:bg-white transition-all text-[#000]"
             />
           </div>
           
@@ -95,7 +95,7 @@ export default function Login() {
               type={isPasswordVisible ? "text" : "password"}
               name="password"
               placeholder="請輸入密碼"
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] bg-gray-50 focus:bg-white transition-all"
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] bg-gray-50 focus:bg-white transition-all text-[#000]"
             />
             <button
               type="button"

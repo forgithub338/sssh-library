@@ -6,11 +6,13 @@ import { XMarkIcon, DocumentIcon, PhotoIcon, VideoCameraIcon, Bars3Icon } from '
 import SideBarMedia from '../../../components/ui/sideBarMedia';
 import SideBarDesktop from '../../../components/ui/sideBarDesktop';
 import getUserEmail from '../../../lib/getUserEmail';
+import getUserPosition from '../../../lib/getUserPosition';
 import { projectTypes, subjectAreas } from '../../../components/data/interestArea';
 
 export default function Upload() {
   const router = useRouter();
   const email = getUserEmail();
+  const position = getUserPosition();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   
   // 檔案上傳參考
@@ -265,8 +267,8 @@ export default function Upload() {
 
   return (
     <div className="flex h-screen bg-[#FAF3E0]">
-      <SideBarMedia sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <SideBarDesktop />
+      <SideBarMedia sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} position={position} />
+      <SideBarDesktop position={position} />
 
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
         {/* 手機版頂部導航欄 */}
@@ -311,7 +313,7 @@ export default function Upload() {
                         name="title"
                         value={formData.title}
                         onChange={handleChange}
-                        className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] text-sm md:text-base"
+                        className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] text-sm md:text-base text-[#000]"
                         placeholder="請輸入作品標題"
                       />
                       {errors.title && (
@@ -326,7 +328,7 @@ export default function Upload() {
                         value={formData.description}
                         onChange={handleChange}
                         rows={3}
-                        className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] text-sm md:text-base resize-none"
+                        className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] text-sm md:text-base resize-none text-[#000]"
                         placeholder="請描述您的作品..."
                       />
                     </div>
@@ -338,7 +340,7 @@ export default function Upload() {
                         name="projectType"
                         value={formData.projectType}
                         onChange={handleChange}
-                        className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] text-sm md:text-base"
+                        className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] text-sm md:text-base text-[#000]"
                       >
                         <option value="">請選擇成果類型</option>
                         {projectTypes.map((type) => (
@@ -360,7 +362,7 @@ export default function Upload() {
                           name="subject"
                           value={formData.subject}
                           onChange={handleChange}
-                          className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] text-sm md:text-base"
+                          className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] text-sm md:text-base text-[#000]"
                         >
                           <option value="">請選擇學科領域</option>
                           {subjectAreas.map((subject) => (
@@ -380,7 +382,7 @@ export default function Upload() {
                           name="interest"
                           value={formData.interest}
                           onChange={handleChange}
-                          className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] text-sm md:text-base"
+                          className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] text-sm md:text-base text-[#000]"
                           disabled={!selectedSubject}
                           style={{backgroundColor: selectedSubject ? 'white' : '#f3f4f6'}}
                         >

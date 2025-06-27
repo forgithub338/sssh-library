@@ -4,9 +4,10 @@ import SideBarDesktop from "@/../components/ui/sideBarDesktop"
 import { projectTypes, subjectAreas } from '../../../components/data/interestArea';
 import { useState, useEffect } from "react";
 import { Heart, Eye, Calendar, User, FileText, Play, X, Loader2, Search, Menu, Filter } from 'lucide-react';
+import getUserPosition from '../../../lib/getUserPosition';
 
 export default function Watch() {
-
+  const position = getUserPosition();
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -147,7 +148,7 @@ export default function Watch() {
             <select
               value={formData.projectType}
               onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-[#000]"
               disabled={loading}
             >
               <option value="所有類型">所有類型</option>
@@ -162,7 +163,7 @@ export default function Watch() {
             <select
               value={formData.subject}
               onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-[#000]"
               disabled={loading}
             >
               <option value="所有領域">所有領域</option>
@@ -177,7 +178,7 @@ export default function Watch() {
             <select
               value={formData.sortBy}
               onChange={(e) => setFormData({ ...formData, sortBy: e.target.value })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-[#000]"
               disabled={loading}
             >
               <option value="date-asc">最新上傳</option>
@@ -253,8 +254,8 @@ export default function Watch() {
 
   return (
     <div className="flex h-screen bg-[#FAF3E0]">
-      <SideBarMedia sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <SideBarDesktop />
+      <SideBarMedia sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} position={position} />
+      <SideBarDesktop position={position} />
 
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
         {/* 手機版頂部導航 */}
@@ -287,7 +288,7 @@ export default function Watch() {
                     <select
                       value={formData.projectType}
                       onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-[#000]"
                       disabled={loading}
                     >
                       <option value="所有類型">所有類型</option>
@@ -302,7 +303,7 @@ export default function Watch() {
                     <select
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-[#000]"
                       disabled={loading}
                     >
                       <option value="所有領域">所有領域</option>
@@ -317,7 +318,7 @@ export default function Watch() {
                     <select
                       value={formData.sortBy}
                       onChange={(e) => setFormData({ ...formData, sortBy: e.target.value })}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-[#000]"
                       disabled={loading}
                     >
                       <option value="date-asc">最新上傳</option>

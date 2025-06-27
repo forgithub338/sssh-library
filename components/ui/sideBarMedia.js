@@ -1,9 +1,11 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import navigationBasic from "@/../components/data/navigation";
 
-const navigation = navigationBasic("管理者")
+
 
 export default function SideBarMedia(props) {
+  const navigation = navigationBasic(props.position)
+  
   return (
     <div className={`fixed inset-0 z-40 flex md:hidden ${props.sidebarOpen ? 'visible' : 'invisible'}`} role="dialog" aria-modal="true">
       <div className={`fixed inset-0 bg-gray-600 bg-opacity-75 transition-opacity ${props.sidebarOpen ? 'opacity-100' : 'opacity-0'}`} 
@@ -15,7 +17,7 @@ export default function SideBarMedia(props) {
             className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
             onClick={() => props.setSidebarOpen(false)}
           >
-            <span className="sr-only">关闭侧边栏</span>
+            <span className="sr-only">關閉側邊欄</span>
             <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
           </button>
         </div>
